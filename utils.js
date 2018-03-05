@@ -7,8 +7,7 @@ const dataPath = path.resolve(__dirname, '../data');
 exports.dataPath = dataPath;
 exports.getDataFilePath = fileName => path.resolve(dataPath, fileName);
 
-exports.grabFrames = (videoFile, delay, onFrame) => {
-    const cap = new cv.VideoCapture(videoFile);
+exports.grabFrames = (cap, delay, onFrame) => {
     let done = false;
     const intvl = setInterval(() => {
         let frame = cap.read();

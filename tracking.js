@@ -4,8 +4,12 @@ const {grabFrames, drawRectAroundBlobs} = require('./utils');
 
 const bgSubtractor = new cv.BackgroundSubtractorMOG2();
 const delay = 50;
+const cap = new cv.VideoCapture(0);
+const size = new cv.Size(640, 480);
+const out  = new cv.VideoWriter('test.avi', cv.VideoWriter.fourcc('MJPG'), 15, size, true);
 
-grabFrames('./data/CarsDrivingUnderBridge.mp4', delay, (frame) => {
+grabFrames(cap, delay, (frame) => {
+    console.log(frame)
     const foreGroundMask = bgSubtractor.apply(frame);
 
     const ITERATIONS = 2;
@@ -23,4 +27,5 @@ grabFrames('./data/CarsDrivingUnderBridge.mp4', delay, (frame) => {
     cv.imshow('foreGroundMask', foreGroundMask);
     cv.imshow('thresholded', thresholded);
     cv.imshow('frame', frame);
+    out.write(frame);
 });

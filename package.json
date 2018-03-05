@@ -12,6 +12,7 @@
   "author": "Max Korinets",
   "license": "UNLICENSED",
   "dependencies": {
+    "flightplan": "^0.6.17",
     "opencv4nodejs": "^3.1.0"
   }
 }
