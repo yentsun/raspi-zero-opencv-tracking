@@ -1,3 +1,4 @@
+import requests
 import argparse
 import datetime
 import imutils
@@ -9,6 +10,9 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--device", type=int, default=0, help="video capture device index")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
+
+addr = 'http://192.168.0.105:1880/cars'
+headers = {'content-type': 'image/png'}
 
 camera = cv2.VideoCapture(args["device"])
 time.sleep(0.25)
@@ -68,10 +72,17 @@ while True:
         (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
     # cv2.imshow("Tracking Feed", frame)
-    if text == 'action':
+    if text == 'action' and not action_saved:
         cv2.imwrite("action%d.png" % action_count, frame)
+        try:
+            print('sending frame...')
+            _, img_encoded = cv2.imencode('.png', frame)
+            requests.post(addr, data=img_encoded.tostring(), headers=headers)
+            print('frame sent')
+        except requests.exceptions.ConnectionError as error:
+            print(error)
         action_saved = True
-    else:
+    if text == 'still':
         cv2.imwrite("still.png", frame)
         if action_saved:
             print('object %d tracked' % action_count)
