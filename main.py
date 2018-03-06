@@ -72,6 +72,7 @@ while True:
         cv2.imwrite("action%d.png" % action_count, frame)
         action_saved = True
     else:
+        cv2.imwrite("still.png", frame)
         if action_saved:
             print('object %d tracked' % action_count)
             action_count += 1
