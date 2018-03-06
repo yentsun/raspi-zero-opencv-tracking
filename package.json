@@ -1,0 +1,18 @@
+{
+  "name": "opencv_tracking",
+  "version": "0.1.0",
+  "description": "",
+  "main": "tracking.js",
+  "scripts": {
+    "start": "node tracking.js"
+  },
+  "keywords": [
+    "opencv"
+  ],
+  "author": "Max Korinets",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "flightplan": "^0.6.17",
+    "opencv4nodejs": "^3.1.0"
+  }
+}
