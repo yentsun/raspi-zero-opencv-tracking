@@ -1,0 +1,13 @@
+{
+  "name": "opencv_tracking",
+  "version": "0.1.0",
+  "description": "OpenCV tracking experiment using Python on RasPi Zero W",
+  "main": "main.py",
+  "author": "Max Korinets",
+  "license": "UNLICENSED",
+  "language":"javascript",
+  "scripts": {
+    "start": "python main.py"
+  },
+  "dependency": null
+}
