@@ -7,7 +7,7 @@ OpenCV tracking experiment for RasPi Zero W
 Usage
 -----
 ```
-main.py [-h] [-d DEVICE] [-a MIN_AREA]
+python main.py [-h] [-d DEVICE] [-a MIN_AREA]
 ```
 
 optional arguments:

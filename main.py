@@ -4,6 +4,7 @@ import imutils
 import time
 import cv2
 
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--device", type=int, default=0, help="video capture device index")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
