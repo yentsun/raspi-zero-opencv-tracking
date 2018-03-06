@@ -67,7 +67,7 @@ while True:
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
         (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
-    cv2.imshow("Tracking Feed", frame)
+    # cv2.imshow("Tracking Feed", frame)
     if text == 'action':
         cv2.imwrite("action%d.png" % action_count, frame)
         action_saved = True
@@ -77,9 +77,5 @@ while True:
             action_count += 1
             action_saved = False
 
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
 
 camera.release()
-cv2.destroyAllWindows()
