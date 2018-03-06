@@ -5,20 +5,12 @@ import time
 import cv2
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--device", help="video capture device index")
+ap.add_argument("-d", "--device", type=int, default=0, help="video capture device index")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
 
-# if the video argument is None, then we are reading from webcam
-if args.get("device", None) is None:
-    camera = cv2.VideoCapture(0)
-    time.sleep(0.25)
-
-# otherwise, we are reading from a video file
-else:
-    camera = cv2.VideoCapture(int(args["device"]))
-
-# initialize the first frame in the video stream
+camera = cv2.VideoCapture(args["device"])
+time.sleep(0.25)
 firstFrame = None
 
 # loop over the frames of the video
