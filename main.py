@@ -11,9 +11,10 @@ ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area si
 args = vars(ap.parse_args())
 
 camera = cv2.VideoCapture(args["device"])
-tracking_feed = cv2.VideoWriter('feed.avi', -1, 1, (640, 480))
 time.sleep(0.25)
 firstFrame = None
+action_saved = False
+action_count = 0
 
 # loop over the frames of the video
 while True:
@@ -40,7 +41,7 @@ while True:
     # compute the absolute difference between the current frame and
     # first frame
     frameDelta = cv2.absdiff(firstFrame, gray)
-    thresh = cv2.threshold(frameDelta, 100, 255, cv2.THRESH_TOZERO)[1]
+    thresh = cv2.threshold(frameDelta, 75, 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
@@ -66,8 +67,19 @@ while True:
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
         (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
-    # cv2.imshow("Tracking Feed", frame)
-    tracking_feed.write(frame)
+    cv2.imshow("Tracking Feed", frame)
+    if text == 'action':
+        cv2.imwrite("action%d.png" % action_count, frame)
+        action_saved = True
+    else:
+        if action_saved:
+            print('object %d tracked' % action_count)
+            action_count += 1
+            action_saved = False
+
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
 
 camera.release()
-tracking_feed.release()
+cv2.destroyAllWindows()
