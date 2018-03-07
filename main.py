@@ -76,15 +76,15 @@ while True:
         action_saved = True
     if text == 'still':
         cv2.imwrite("still.png", frame)
-        # try:
-        #     headers = {'content-type': 'image/png'}
-        #     _, img_encoded = cv2.imencode('.png', frame)
-        #     requests.post('http://192.168.0.105:1880/still', data=img_encoded.tostring(), headers=headers)
-        # except requests.exceptions.ConnectionError as error:
-        #     print(error)
         if action_saved:
             print('object %d tracked' % action_count)
             action_count += 1
             action_saved = False
+    try:
+        headers = {'content-type': 'image/png'}
+        _, img_encoded = cv2.imencode('.png', frame)
+        requests.post('http://192.168.0.105:1880/still', data=img_encoded.tostring(), headers=headers)
+    except requests.exceptions.ConnectionError as error:
+        print(error)
 
 camera.release()
