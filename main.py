@@ -20,7 +20,7 @@ action_count = 0
 while True:
     # grab the current frame
     (grabbed, frame) = camera.read()
-    text = "still%s" % THRESHOLD
+    text = "still"
 
     if not grabbed:
         break
