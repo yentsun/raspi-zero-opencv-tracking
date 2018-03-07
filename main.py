@@ -9,7 +9,7 @@ import cv2
 DEVICE = int(os.getenv('DEVICE', 0))
 MIN_AREA = int(os.getenv('MIN_AREA', 500))
 URL = os.getenv('POST_URL', 'http://localhost/action')
-THRESHOLD = os.getenv('THRESHOLD', 75)
+THRESHOLD = int(os.getenv('THRESHOLD', 75))
 
 camera = cv2.VideoCapture(DEVICE)
 time.sleep(0.25)
