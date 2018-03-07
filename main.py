@@ -1,34 +1,26 @@
+import os
 import requests
-import argparse
 import datetime
 import imutils
 import time
 import cv2
 
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--device", type=int, default=0, help="video capture device index")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
-args = vars(ap.parse_args())
+DEVICE = int(os.getenv('DEVICE', 0))
+MIN_AREA = int(os.getenv('MIN_AREA', 500))
+URL = os.getenv('POST_URL', 'http://localhost/action')
 
-addr = 'http://192.168.0.105:1880/cars'
-headers = {'content-type': 'image/png'}
-
-camera = cv2.VideoCapture(args["device"])
+camera = cv2.VideoCapture(DEVICE)
 time.sleep(0.25)
 firstFrame = None
 action_saved = False
 action_count = 0
 
-# loop over the frames of the video
 while True:
-    # grab the current frame and initialize the occupied/unoccupied
-    # text
+    # grab the current frame
     (grabbed, frame) = camera.read()
     text = "still"
 
-    # if the frame could not be grabbed, then we have reached the end
-    # of the video
     if not grabbed:
         break
 
@@ -51,12 +43,12 @@ while True:
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
     (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
+                                 cv2.CHAIN_APPROX_SIMPLE)
 
     # loop over the contours
     for c in cnts:
         # if the contour is too small, ignore it
-        if cv2.contourArea(c) < args["min_area"]:
+        if cv2.contourArea(c) < MIN_AREA:
             continue
 
         # compute the bounding box for the contour, draw it on the frame,
@@ -67,17 +59,18 @@ while True:
 
     # draw the text and timestamp on the frame
     cv2.putText(frame, "Scene Status: {}".format(text), (10, 20),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
-        (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+                (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
     # cv2.imshow("Tracking Feed", frame)
     if text == 'action' and not action_saved:
         cv2.imwrite("action%d.png" % action_count, frame)
         try:
             print('sending frame...')
+            headers = {'content-type': 'image/png'}
             _, img_encoded = cv2.imencode('.png', frame)
-            requests.post(addr, data=img_encoded.tostring(), headers=headers)
+            requests.post(URL, data=img_encoded.tostring(), headers=headers)
             print('frame sent')
         except requests.exceptions.ConnectionError as error:
             print(error)
@@ -88,6 +81,5 @@ while True:
             print('object %d tracked' % action_count)
             action_count += 1
             action_saved = False
-
 
 camera.release()

@@ -7,11 +7,11 @@ OpenCV tracking experiment for RasPi Zero W
 Usage
 -----
 ```
-python main.py [-h] [-d DEVICE] [-a MIN_AREA]
+python main.py
 ```
 
-optional arguments:
+Optional envars:
 
-* `-h, --help` - show help message and exit
-* `-d DEVICE, --device DEVICE` - video capture device index
-* `-a MIN_AREA, --min-area MIN_AREA` - minimum area size
+* `DEVICE` - video capture device index, default: `0`
+* `MIN_AREA` - minimum area size, default: `500`
+* `POST_URL` - url to POST images to, default: `http://localhost/action`
