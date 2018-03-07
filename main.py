@@ -9,6 +9,7 @@ import cv2
 DEVICE = int(os.getenv('DEVICE', 0))
 MIN_AREA = int(os.getenv('MIN_AREA', 500))
 URL = os.getenv('POST_URL', 'http://localhost/action')
+THRESHOLD = os.getenv('THRESHOLD', 75)
 
 camera = cv2.VideoCapture(DEVICE)
 time.sleep(0.25)
@@ -37,7 +38,7 @@ while True:
     # compute the absolute difference between the current frame and
     # first frame
     frameDelta = cv2.absdiff(firstFrame, gray)
-    thresh = cv2.threshold(frameDelta, 75, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(frameDelta, THRESHOLD, 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
