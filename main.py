@@ -65,7 +65,7 @@ while True:
                 (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
     # cv2.imshow("Tracking Feed", frame)
-    if text == 'action' and not action_saved:
+    if text != 'still' and not action_saved:
         cv2.imwrite("action%d.png" % action_count, frame)
         try:
             headers = {'content-type': 'image/png'}
