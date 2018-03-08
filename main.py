@@ -8,15 +8,15 @@ import cv2
 
 DEVICE = int(os.getenv('DEVICE', 0))
 MIN_AREA = int(os.getenv('MIN_AREA', 500))
+THRESHOLD = int(os.getenv('THRESHOLD', 75))
 ACTION_URL = os.getenv('ACTION_URL', 'http://localhost/action')
 STILL_URL = os.getenv('STILL_URL', 'http://localhost/still')
-THRESHOLD = int(os.getenv('THRESHOLD', 75))
 
 camera = cv2.VideoCapture(DEVICE)
 time.sleep(0.25)
 firstFrame = None
 action_saved = False
-action_count = 0
+action_count = 1
 
 while True:
     # grab the current frame
@@ -39,7 +39,7 @@ while True:
     # compute the absolute difference between the current frame and
     # first frame
     frameDelta = cv2.absdiff(firstFrame, gray)
-    thresh = cv2.threshold(frameDelta, THRESHOLD, 255, cv2.THRESH_BINARY_INV)[1]
+    thresh = cv2.threshold(frameDelta, THRESHOLD, 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
@@ -64,9 +64,8 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p ") + "T: %d" % THRESHOLD,
                 (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-
-    # cv2.imshow("Tracking Feed", frame)
     if text != 'still' and not action_saved:
+        print('action frame', action_count)
         cv2.imwrite("action%d.png" % action_count, frame)
         try:
             headers = {'content-type': 'image/png'}
