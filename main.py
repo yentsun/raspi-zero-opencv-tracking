@@ -8,7 +8,8 @@ import cv2
 
 DEVICE = int(os.getenv('DEVICE', 0))
 MIN_AREA = int(os.getenv('MIN_AREA', 500))
-URL = os.getenv('POST_URL', 'http://localhost/action')
+ACTION_URL = os.getenv('POST_URL', 'http://localhost/action')
+STILL_URL = os.getenv('POST_URL', 'http://localhost/still')
 THRESHOLD = int(os.getenv('THRESHOLD', 75))
 
 camera = cv2.VideoCapture(DEVICE)
@@ -70,7 +71,7 @@ while True:
         try:
             headers = {'content-type': 'image/png'}
             _, img_encoded = cv2.imencode('.png', frame)
-            requests.post(URL, data=img_encoded.tostring(), headers=headers)
+            requests.post(ACTION_URL, data=img_encoded.tostring(), headers=headers)
         except requests.exceptions.ConnectionError as error:
             print(error)
         action_saved = True
@@ -78,7 +79,7 @@ while True:
         try:
             headers = {'content-type': 'image/png'}
             _, img_encoded = cv2.imencode('.png', frame)
-            requests.post('http://192.168.0.105:1880/still', data=img_encoded.tostring(), headers=headers)
+            requests.post(STILL_URL, data=img_encoded.tostring(), headers=headers)
         except requests.exceptions.ConnectionError as error:
             print(error)
         if action_saved:
