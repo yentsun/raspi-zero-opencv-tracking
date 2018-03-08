@@ -38,7 +38,7 @@ while True:
     # compute the absolute difference between the current frame and
     # first frame
     frameDelta = cv2.absdiff(firstFrame, gray)
-    thresh = cv2.threshold(frameDelta, THRESHOLD, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(frameDelta, THRESHOLD, 255, cv2.THRESH_BINARY_INV)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
@@ -75,7 +75,6 @@ while True:
             print(error)
         action_saved = True
     if text == 'still':
-        cv2.imwrite("still.png", frame)
         try:
             headers = {'content-type': 'image/png'}
             _, img_encoded = cv2.imencode('.png', frame)
